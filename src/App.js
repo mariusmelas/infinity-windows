@@ -1,26 +1,47 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useRef, useEffect } from 'react'
+import Window from './components/window/Window.js'
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+  const forwardRef = useRef(0)
+  const [mouseIsUp, setMouseisUp] = useState(true)
+  const [size, setSize] = useState([0, 0])
+  const [highestZindex, setHighestZindex] = useState(0)
 
-export default App;
+  useEffect(() => {
+    const width = forwardRef.current.offsetWidth
+    const height = forwardRef.current.offsetHeight
+    setSize([width, height])
+  }, [])
+
+  const handleMouseUp = function(e) {
+    setMouseisUp(true)
+  }
+
+  const handleMouseDown = function(e) {
+    e.preventDefault()
+    setMouseisUp(false)
+  }
+
+  return (
+    <div
+      onMouseUp={handleMouseUp}
+      onMouseDown={handleMouseDown}
+      ref={forwardRef}
+      style={{
+        backgroundColor: 'azure',
+        width: '100v',
+        height: '100vh',
+      }}
+    >
+      <Window
+        isRoot={true}
+        forwardRef={forwardRef}
+        parentSize={[size[0], size[1]]}
+        mouseIsUp={mouseIsUp}
+        highestZindex={highestZindex}
+        setHighestZindex={setHighestZindex}
+      />
+    </div>
+  )
+}
+export default App
